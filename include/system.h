@@ -15,13 +15,11 @@
  *
  * =====================================================================================
  */
-#ifndef __SYSTEM_H
-#define __SYSTEM_H
+#ifndef __BING_H
+#define __BING_H
 
 typedef int size_t;
 
-/* This defines what the stack looks like after an ISR was running */
-  
 struct regs
 {
     unsigned int gs, fs, es, ds;
@@ -32,7 +30,7 @@ struct regs
 
 
 
-/* MAIN.C */
+/* bingmain.c */
 extern void *memcpy(void *dest, const void *src, size_t count);
 extern void *memset(void *dest, char val, size_t count);
 extern unsigned short *memsetw(unsigned short *dest, unsigned short val, size_t count);
@@ -40,7 +38,7 @@ extern size_t strlen(const char *str);
 extern unsigned char inportb (unsigned short _port);
 extern void outportb (unsigned short _port, unsigned char _data);
 
-/* CONSOLE.C */
+/* screen.c */
 extern void init_video(void);
 extern void puts(unsigned char *text);
 extern void putch(unsigned char c);
@@ -51,18 +49,18 @@ extern void line_parser();
 extern void keyboard_handler(struct regs *r);
  
 
-/* GDT.C */
+/* gdt.c */
 
 extern void gdt_install();
 extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
 
 
-/* IDT.C */
+/* interrupts.c */
 
 extern void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
 extern void idt_install();
   
-/* IRQ.C */
+/* int_req.c */
 extern void irq_install_handler(int irq, void (*handler)(struct regs *r));
 extern void irq_uninstall_handler(int irq);
 extern void irq_install();

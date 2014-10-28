@@ -32,8 +32,8 @@ mboot:
 
 
 stublet:
-    extern main
-    call main
+    extern bingmain
+    call bingmain
     jmp $
 
 global gdt_flush
