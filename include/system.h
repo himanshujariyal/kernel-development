@@ -67,6 +67,7 @@ extern void irq_install();
 extern void fault_handler(struct regs *r);
 
 extern void keyboard_install();
+
 /* mm.c */
 
 #define MEM_LOW 0x40000000
@@ -77,5 +78,6 @@ extern int first_free_block();
 extern void mm_init();
 extern int* mm_alloc_block();
 extern void mm_free_block(int* p);
+
 
 #endif

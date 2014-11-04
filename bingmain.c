@@ -46,6 +46,7 @@ void bingmain()
     keyboard_install();
     mm_init();
     print_mm_things();
+
  __asm__ __volatile__ ("sti");
     settextcolor(0x1, 0x0);
     puts("                         Welcome to  BingOS! \n");
