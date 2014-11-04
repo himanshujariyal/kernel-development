@@ -195,3 +195,42 @@ void delete_dir(char dir_name[], int n)
   }
 }
 
+void rename_file(char file_name[], int n, char new_name[], int new_n)
+{
+  int file = find_file(file_name, n);
+  if(file==-1)
+  {
+    puts("No match found");
+  }
+  else   // for now only file reference is deleted -> node free entry still missing
+  {
+    int i=0;
+    while(i<new_n)
+    {
+      all_files[file].name[i]=new_name[i];
+      i++;
+    }
+    all_files[file].size = new_n;
+    puts("Renamed file\n");
+  }
+}
+
+void rename_dir(char dir_name[], int n, char new_name[], int new_n)
+{
+  int dir = find_dir(dir_name, n);
+  if(dir==-1)
+  {
+    puts("No match found");
+  }
+  else   // for now only dir reference is deleted -> node free entry still missing
+  {
+    int i=0;
+    while(i<new_n)
+    {
+      all_dirs[dir].name[i]=new_name[i];
+      i++;
+    }
+    all_dirs[dir].size = new_n;
+    puts("Renamed dir\n");
+  }
+}

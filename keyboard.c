@@ -61,6 +61,7 @@ unsigned char kbdus[128] =
 };
 
 char line[80];
+char second[100];
 int k=0;
 void line_collector(unsigned char scancode)
 {
@@ -90,19 +91,36 @@ void line_parser()
    else if(line[0]=='b' && line[1]=='y' && line[2]=='e')
        puts("Oh Captain! My Captain! I will miss you. :'( \n");
 
-   else if((line[0]=='m' || line[0]=='d') && (line[1]=='f' || line[1]=='d'))
+   else if((line[0]=='m' || line[0]=='d' || line[0]=='r') && (line[1]=='f' || line[1]=='d'))
    {
-     int i=3;
+     int i=3,j=0,k=0;
      char c0 = line[0], c1 = line[1];
      while(i<l)
      {
        line[i-3]=line[i];
+       if(line[i]==' ')
+       {
+         j=i;
+         break;
+       }
        i++;
+     }
+     if(j>0)
+     {
+       j++;
+       k=j;
+       while(j<l)
+       {
+         second[j-k]=line[j];
+         j++;
+       }
      }
      if(c0=='m' && c1=='f') create_file(line,i-3);
      else if(c0=='m' && c1=='d') create_dir(line,i-3);
      else if(c0=='d' && c1=='f') delete_file(line,i-3);
      else if(c0=='d' && c1=='d') delete_dir(line,i-3);
+     else if(c0=='r' && c1=='f') rename_file(line,i-3,second,j-k);
+     else if(c0=='r' && c1=='d') rename_dir(line,i-3,second,j-k);
    }
    else if(line[0]=='l' && (line[1]=='s')) show_contents();
 

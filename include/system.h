@@ -82,8 +82,8 @@ extern void create_file(char file_name[], int n);
 extern void create_dir(char dir_name[], int n);
 extern void delete_file(char file_name[], int n);
 extern void delete_dir(char dir_name[], int n); 
-extern void rename_file(char file_name[], int n);
-extern void rename_dir(char dir_name[], int n); 
+extern void rename_file(char file_name[], int n, char new_name[], int new_n);
+extern void rename_dir(char dir_name[], int n, char new_name[], int new_n); 
 extern void copy_file(char file_name[], int fn, char dir_name[], int dn);
 extern void move_file(char file_name[], int fn, char dir_name[], int dn);
 
