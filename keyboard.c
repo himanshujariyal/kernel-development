@@ -90,6 +90,20 @@ void line_parser()
    else if(line[0]=='b' && line[1]=='y' && line[2]=='e')
        puts("Oh Captain! My Captain! I will miss you. :'( \n");
 
+   else if(line[0]=='m' && (line[1]=='f' || line[1]=='d'))
+   {
+     int i=3;
+     char c = line[1];
+     while(i<l)
+     {
+       line[i-3]=line[i];
+       i++;
+     }
+     if(c=='f') create_file(line,i-3);
+     else if(c=='d') create_dir(line,i-3);
+   }
+   else if(line[0]=='l' && (line[1]=='s')) show_contents();
+
    else{
        int first_number=0;
        int second_number=0;
@@ -137,5 +151,7 @@ void keyboard_install()
 
 /* KEYBOARD.C */
 extern void keyboard_install();
+
+
 
 

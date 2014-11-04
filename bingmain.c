@@ -45,10 +45,32 @@ void bingmain()
     irq_install(); 
     keyboard_install();
 
+    all_dirs[0].name[0] = 'r';
+    all_dirs[0].name[1] = 'o';
+    all_dirs[0].name[2] = 'o';
+    all_dirs[0].name[3] = 't';
+    all_dirs[0].size = 4;
+    all_dirs[0].max_files = 0;
+    all_dirs[0].max_dirs = 0;
+    current_dir = all_dirs[0];
+    total_dirs=1;
+    total_files=0;
+
+
  __asm__ __volatile__ ("sti");
     settextcolor(0x1, 0x0);
     puts("                         Welcome to  BingOS! \n");
     settextcolor(0xf, 0x0);
+
+    int i=0;
+    puts("Currently into ");
+    while(i<current_dir.size)
+    {
+       putch(current_dir.name[i]);
+       i++;
+    }
+    puts(" directory\n");
+
     for (;;);
 
 
