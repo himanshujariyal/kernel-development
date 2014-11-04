@@ -22,9 +22,9 @@ int cmpstr(char a[], int an, char b[], int bn)
 int find_file(char fname[], int fn)
 {
   int i=0;
-  while(i<current_dir.max_files)
+  while(i<all_dirs[current_dir].max_files)
   {
-    if(cmpstr(fname,fn,all_files[current_dir.files[i]].name,all_files[current_dir.files[i]].size)==1) return current_dir.files[i];
+    if(cmpstr(fname,fn,all_files[all_dirs[current_dir].files[i]].name,all_files[all_dirs[current_dir].files[i]].size)==1) return all_dirs[current_dir].files[i];
     i++;
   }
   return -1;
@@ -33,9 +33,9 @@ int find_file(char fname[], int fn)
 int find_dir(char dname[], int dn)
 {
   int i=0;
-  while(i<current_dir.max_dirs)
+  while(i<all_dirs[current_dir].max_dirs)
   {
-    if(cmpstr(dname,dn,all_dirs[current_dir.sub_dirs[i]].name,all_dirs[current_dir.sub_dirs[i]].size)==1) return current_dir.sub_dirs[i];
+    if(cmpstr(dname,dn,all_dirs[all_dirs[current_dir].sub_dirs[i]].name,all_dirs[all_dirs[current_dir].sub_dirs[i]].size)==1) return all_dirs[current_dir].sub_dirs[i];
     i++;
   }
   return -1;
@@ -53,8 +53,8 @@ void create_file(char file_name[], int n)            // using mf command -> "mf 
   all_files[total_files].chunks[0] = "New file!";
   all_files[total_files].max_chunk = 1;
   all_files[total_files].last_modified = "<Current Date>";
-  current_dir.files[current_dir.max_files]=total_files;
-  current_dir.max_files += 1;
+  all_dirs[current_dir].files[all_dirs[current_dir].max_files]=total_files;
+  all_dirs[current_dir].max_files += 1;
   total_files++;
   i=0;
   while(i<n)
@@ -64,9 +64,9 @@ void create_file(char file_name[], int n)            // using mf command -> "mf 
   }
   puts(" file added to ");
   i=0;
-  while(i<current_dir.size)
+  while(i<all_dirs[current_dir].size)
   {
-    putch(current_dir.name[i]);
+    putch(all_dirs[current_dir].name[i]);
     i++;
   }
   puts(" directory\n");
@@ -83,10 +83,12 @@ void create_dir(char dir_name[], int n)             // using md command -> "md d
   }
   all_dirs[total_dirs].size = n;
   all_dirs[total_dirs].max_files = 0;
-  all_dirs[total_dirs].max_dirs = 0;
+  all_dirs[total_dirs].sub_dirs[0] = total_dirs;     // first is it itself
+  all_dirs[total_dirs].sub_dirs[1] = current_dir;    // second is parent
+  all_dirs[total_dirs].max_dirs = 2;
   all_dirs[total_dirs].last_modified = "<Current Date>";
-  current_dir.sub_dirs[current_dir.max_dirs] = total_dirs++;
-  current_dir.max_dirs += 1;
+  all_dirs[current_dir].sub_dirs[all_dirs[current_dir].max_dirs] = total_dirs++;
+  all_dirs[current_dir].max_dirs += 1;
   i=0;
   while(i<n)
   {
@@ -95,9 +97,9 @@ void create_dir(char dir_name[], int n)             // using md command -> "md d
   }
   puts(" directory added to ");
   i=0;
-  while(i<current_dir.size)
+  while(i<all_dirs[current_dir].size)
   {
-    putch(current_dir.name[i]);
+    putch(all_dirs[current_dir].name[i]);
     i++;
   }
   puts(" directory\n");
@@ -107,14 +109,14 @@ void show_contents()                         // using ls command -> "ls"
 {
   int i=0,j;
   puts("This directory's contents:\nFiles: ");
-  putint(current_dir.max_files);
+  putint(all_dirs[current_dir].max_files);
   putch('\n');
-  while(i<(current_dir.max_files))
+  while(i<(all_dirs[current_dir].max_files))
   {
     j=0;
-    while(j<all_files[current_dir.files[i]].size)
+    while(j<all_files[all_dirs[current_dir].files[i]].size)
     {
-      putch(all_files[(current_dir.files[i])].name[j]);
+      putch(all_files[(all_dirs[current_dir].files[i])].name[j]);
       j++;
     }
     putch('\t');
@@ -122,15 +124,15 @@ void show_contents()                         // using ls command -> "ls"
   }
   putch('\n');
   puts("Sub Directories: ");
-  i=0;
-  putint(current_dir.max_dirs);
+  i=2;
+  putint(all_dirs[current_dir].max_dirs-2);
   putch('\n');
-  while(i<(current_dir.max_dirs))
+  while(i<(all_dirs[current_dir].max_dirs))
   {
     j=0;
-    while(j<all_dirs[current_dir.sub_dirs[i]].size)
+    while(j<all_dirs[all_dirs[current_dir].sub_dirs[i]].size)
     {
-      putch(all_dirs[(current_dir.sub_dirs[i])].name[j]);
+      putch(all_dirs[(all_dirs[current_dir].sub_dirs[i])].name[j]);
       j++;
     }
     putch('\t');
@@ -150,18 +152,18 @@ void delete_file(char file_name[], int n)
   else   // for now only file reference is deleted -> node free entry still missing
   {
     int i=0;
-    while(i<current_dir.max_files)
+    while(i<all_dirs[current_dir].max_files)
     {
-      if(current_dir.files[i]==file) break;
+      if(all_dirs[current_dir].files[i]==file) break;
       i++;
     }
     i++;
-    while(i<current_dir.max_files)
+    while(i<all_dirs[current_dir].max_files)
     {
-      current_dir.files[i-1]=current_dir.files[i];
+      all_dirs[current_dir].files[i-1]=all_dirs[current_dir].files[i];
       i++;
     }
-    current_dir.max_files -= 1;
+    all_dirs[current_dir].max_files -= 1;
 
     puts("Deleted file\n");
   }
@@ -178,18 +180,18 @@ void delete_dir(char dir_name[], int n)
   else   // for now only dir reference is deleted -> node free entry still missing
   {
     int i=0;
-    while(i<current_dir.max_dirs)
+    while(i<all_dirs[current_dir].max_dirs)
     {
-      if(current_dir.sub_dirs[i]==dir) break;
+      if(all_dirs[current_dir].sub_dirs[i]==dir) break;
       i++;
     }
     i++;
-    while(i<current_dir.max_dirs)
+    while(i<all_dirs[current_dir].max_dirs)
     {
-      current_dir.sub_dirs[i-1]=current_dir.sub_dirs[i];
+      all_dirs[current_dir].sub_dirs[i-1]=all_dirs[current_dir].sub_dirs[i];
       i++;
     }
-    current_dir.max_dirs -= 1;
+    all_dirs[current_dir].max_dirs -= 1;
 
     puts("Deleted dir\n");
   }
@@ -232,5 +234,28 @@ void rename_dir(char dir_name[], int n, char new_name[], int new_n)
     }
     all_dirs[dir].size = new_n;
     puts("Renamed dir\n");
+  }
+}
+
+void change_dir(char dir_name[], int n)
+{
+  int dir = find_dir(dir_name, n);
+  if(dir_name[0]=='.' && dir_name[1]=='.') dir = all_dirs[current_dir].sub_dirs[1];
+  else if(dir_name[0]=='.') dir = all_dirs[current_dir].sub_dirs[0];
+  if(dir==-1)
+  {
+    puts("No match found");
+  }
+  else   // for now only dir reference is deleted -> node free entry still missing
+  {
+    current_dir = dir;
+    int i=0;
+    puts("Changed current directory to ");
+    while(i<all_dirs[current_dir].size)
+    {
+       putch(all_dirs[current_dir].name[i]);
+       i++;
+    }
+    putch('\n');
   }
 }

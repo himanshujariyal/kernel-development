@@ -71,7 +71,7 @@ typedef struct dir_node
   char* last_modified;
 } dnode;
 
-dnode current_dir;         // The current directory in which the user is
+int current_dir;         // The current directory in which the user is
 dnode all_dirs[100];       // The array of all dirs
 int total_dirs;
 fnode all_files[100];      // all files
@@ -88,6 +88,7 @@ extern void copy_file(char file_name[], int fn, char dir_name[], int dn);
 extern void move_file(char file_name[], int fn, char dir_name[], int dn);
 
 extern void show_contents();
+extern void change_dir(char dir_name[], int n);
 
 /* gdt.c */
 
