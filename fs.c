@@ -259,3 +259,110 @@ void change_dir(char dir_name[], int n)
     putch('\n');
   }
 }
+
+
+void move_file(char file_name[], int fn, char dir_name[], int dn)
+{
+  
+  int file = find_file(file_name, fn);
+  if(file==-1)
+  {
+    puts("No match found for file");
+  }
+  else   // for now only file reference is deleted -> node free entry still missing
+  {
+    int dir = find_dir(dir_name, dn);
+    if(dir_name[0]=='.' && dir_name[1]=='.') dir = all_dirs[current_dir].sub_dirs[1];
+    else if(dir_name[0]=='.') dir = all_dirs[current_dir].sub_dirs[0];
+    if(dir==-1)
+    {
+      puts("No match found for directory");
+    }
+    else   // for now only dir reference is deleted -> node free entry still missing
+    {
+      int i=0;
+      while(i<all_dirs[current_dir].max_files)
+      {
+        if(all_dirs[current_dir].files[i]==file) break;
+        i++;
+      }
+      i++;
+      while(i<all_dirs[current_dir].max_files)
+      {
+        all_dirs[current_dir].files[i-1]=all_dirs[current_dir].files[i];
+        i++;
+      }
+      all_dirs[current_dir].max_files -= 1;
+      
+      all_dirs[dir].files[all_dirs[dir].max_files++]=file;
+      puts("Moved ");
+      i=0;
+      while(i<fn)
+      {
+        putch(all_files[file].name[i]);
+        i++;
+      }
+      puts(" to ");
+      i=0;
+      while(i<all_dirs[dir].size)
+      {
+         putch(all_dirs[dir].name[i]);
+         i++;
+      }
+      putch('\n');
+    }
+  }
+}
+
+
+void copy_file(char file_name[], int fn, char dir_name[], int dn)
+{
+  
+  int file = find_file(file_name, fn);
+  if(file==-1)
+  {
+    puts("No match found for file");
+  }
+  else   // for now only file reference is deleted -> node free entry still missing
+  {
+    int dir = find_dir(dir_name, dn);
+    if(dir_name[0]=='.' && dir_name[1]=='.') dir = all_dirs[current_dir].sub_dirs[1];
+    else if(dir_name[0]=='.') dir = all_dirs[current_dir].sub_dirs[0];
+    if(dir==-1)
+    {
+      puts("No match found for directory");
+    }
+    else   // for now only dir reference is deleted -> node free entry still missing
+    {
+      int i=0;
+      while(i<fn)
+      {
+        all_files[total_files].name[i] = file_name[i];
+        i++;
+      }
+      all_files[total_files].size = fn;
+      all_files[total_files].chunks[0] = "New file!";
+      all_files[total_files].max_chunk = 1;
+      all_files[total_files].last_modified = "<Current Date>";
+      all_dirs[dir].files[all_dirs[dir].max_files]=total_files;
+      all_dirs[dir].max_files += 1;
+      total_files++;
+      
+      puts("Copied ");
+      i=0;
+      while(i<fn)
+      {
+        putch(all_files[file].name[i]);
+        i++;
+      }
+      puts(" to ");
+      i=0;
+      while(i<all_dirs[dir].size)
+      {
+         putch(all_dirs[dir].name[i]);
+         i++;
+      }
+      putch('\n');
+    }
+  }
+}
