@@ -10,7 +10,8 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  YOUR NAME (), 
+ *         A
+ *         uthor:  YOUR NAME (), 
  *   Organization:  
  *
  * =====================================================================================

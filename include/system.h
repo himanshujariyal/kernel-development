@@ -79,5 +79,10 @@ extern void mm_init();
 extern int* mm_alloc_block();
 extern void mm_free_block(int* p);
 
+/* process */
+
+void loadProcesses(void (*processhandler)());
+void process1();
+void process_init();
 
 #endif

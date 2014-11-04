@@ -21,27 +21,28 @@
 struct task_struct
 {
 	int state;   
-    int pid;
-    int priority;
+//    int pid;
+//    int priority;
     int process_table_number;
 
-    int exit_code;
+//    int exit_code;
 
-    int runtime;
+/*    int runtime;
     int start_time;
     int deadline;
-    
-    int start_stack;
+*/    
+/*    int start_stack;
     int start_code,end_code;
     int start_data,end_data;
     int code_limit;
     int data_limit;
-
-    struct tss_struct task_state_segment;
+*/
+/*    struct tss_struct task_state_segment;
 
     struct inode* present;
     struct inode* root;
     struct file* files[];
+    */
 };
 
 struct process_table
@@ -53,9 +54,6 @@ struct process_table
     task_struct* current;
 };
 
-task_struct init_task = {
-    0,1,1,1,0,5,0,10,
-}
 
 process_table PT;
 
@@ -83,13 +81,12 @@ void schedule(){
    /* else if( PT -> scheduling_algo == 1) ........ */
     }
 
-void kill(nr){
+/*void kill(nr){
     task_struct* p = PT -> tasks[nr];
     mm_free_block(p-> start_code);
     p = NULL;
-   /*  free_space(p);  */
+  *  free_space(p);  */
 
-}
 
 /*
 void exec(char* path){

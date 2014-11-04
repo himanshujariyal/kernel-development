@@ -499,7 +499,47 @@ irq_common_stub:
     add esp, 8
     iret
 
-;
+global execute
+extern process_stack
+extern process_start
+
+extern debug
+
+executes:
+    pusha
+    push ds
+    push es
+    push fs
+    push gs
+
+ 
+    mov ax, 0x10
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
+    push   0x10 
+    push   process_stack      ; stack
+    push    0x200           ; EFLAGS
+    push    0x08            ; CS, user mode code selector is 0x18. With RPL 3 this is 0x1b
+    push   process_start    ; EIP
+    iretd 
+       
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+    add esp, 8
+
+    iret
+
+
+execute:
+    jmp process_start
+    iret
 ;
 
 SECTION .bss
