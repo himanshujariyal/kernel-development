@@ -3,6 +3,43 @@
 
 /************************************************** file system ******************************************/
 
+int cmpstr(char a[], int an, char b[], int bn)
+{
+  if(an!=bn) return 0;
+  int i=0;
+  while(i<an)
+  {
+/*    putch(a[i]);
+    putch('\t');
+    putch(b[i]);
+    putch('\n');*/
+    if(a[i]!=b[i]) return 0;
+    i++;
+  }
+  return 1;
+}
+
+int find_file(char fname[], int fn)
+{
+  int i=0;
+  while(i<current_dir.max_files)
+  {
+    if(cmpstr(fname,fn,all_files[current_dir.files[i]].name,all_files[current_dir.files[i]].size)==1) return current_dir.files[i];
+    i++;
+  }
+  return -1;
+}
+
+int find_dir(char dname[], int dn)
+{
+  int i=0;
+  while(i<current_dir.max_dirs)
+  {
+    if(cmpstr(dname,dn,all_dirs[current_dir.sub_dirs[i]].name,all_dirs[current_dir.sub_dirs[i]].size)==1) return current_dir.sub_dirs[i];
+    i++;
+  }
+  return -1;
+}
 
 void create_file(char file_name[], int n)            // using mf command -> "mf file1"
 {
@@ -103,7 +140,58 @@ void show_contents()                         // using ls command -> "ls"
 }
 
 
+void delete_file(char file_name[], int n)
+{
+  int file = find_file(file_name, n);
+  if(file==-1)
+  {
+    puts("No match found");
+  }
+  else   // for now only file reference is deleted -> node free entry still missing
+  {
+    int i=0;
+    while(i<current_dir.max_files)
+    {
+      if(current_dir.files[i]==file) break;
+      i++;
+    }
+    i++;
+    while(i<current_dir.max_files)
+    {
+      current_dir.files[i-1]=current_dir.files[i];
+      i++;
+    }
+    current_dir.max_files -= 1;
+
+    puts("Deleted file\n");
+  }
+}
 
 
+void delete_dir(char dir_name[], int n)
+{
+  int dir = find_dir(dir_name, n);
+  if(dir==-1)
+  {
+    puts("No match found");
+  }
+  else   // for now only dir reference is deleted -> node free entry still missing
+  {
+    int i=0;
+    while(i<current_dir.max_dirs)
+    {
+      if(current_dir.sub_dirs[i]==dir) break;
+      i++;
+    }
+    i++;
+    while(i<current_dir.max_dirs)
+    {
+      current_dir.sub_dirs[i-1]=current_dir.sub_dirs[i];
+      i++;
+    }
+    current_dir.max_dirs -= 1;
 
+    puts("Deleted dir\n");
+  }
+}
 
